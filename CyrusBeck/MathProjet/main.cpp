@@ -8,7 +8,10 @@ void mouseClicks(int button, int state, int x, int y);
 void affichage();
 void createMenu();
 void elementSelected(int i);
+void colorMenu(int index);
+void changeColor(float red, float green, float blue);
 void init();
+Color currentColor;
 
 std::vector<Point> pointArray;
 
@@ -29,23 +32,10 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-/*void mouseClicks(int button, int state, int x, int y) {
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-		y = 500 - y;
-		std::cout << "x : " << x << " y : " << y << std::endl;
-		glPointSize(10);
-		glBegin(GL_POINTS);
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex2f(x, y);
-		glEnd();
-		glutSwapBuffers();
-	}
-}*/
-
 void mouseClicks(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		y = 500 - y;
-		pointArray.push_back(Point(x, y));
+		pointArray.push_back(Point(x, y, currentColor));
 		glutPostRedisplay();
 	}
 }
@@ -55,11 +45,12 @@ void affichage(){
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glPointSize(10);
-	glColor3f(1.0f, 0.0f, 0.0f);
 	for (std::vector<Point>::size_type i = 0; i < pointArray.size(); i++)
 	{
 		glBegin(GL_POINTS);
-		glVertex2f(pointArray[i].x_get(),pointArray[i].y_get());
+		Point p = pointArray[i];
+		glColor3f(p.color_get().red_get(), p.color_get().green_get(), p.color_get().blue_get());
+		glVertex2f(p.x_get(),p.y_get());
 		glEnd();
 	}
 
@@ -72,8 +63,15 @@ void affichage(){
 void createMenu()
 {
 	int menuIndex = glutCreateMenu(elementSelected);
+	//couleur menu
+	int submenu = glutCreateMenu(colorMenu);
+	glutAddMenuEntry("Red", 0);
+	glutAddMenuEntry("Green", 1);
+	glutAddMenuEntry("Blue", 2);
+	glutAddMenuEntry("Custom", 3); //a implementer plus tard
+	//menu principal
 	glutSetMenu(menuIndex);
-	glutAddMenuEntry("couleurs", 0);
+	glutAddSubMenu("couleurs", submenu);
 	glutAddMenuEntry("polygone a decouper", 1);
 	glutAddMenuEntry("tracer fenetre", 2);
 	glutAddMenuEntry("fenetrage", 3);
@@ -85,9 +83,6 @@ void elementSelected(int index)
 {
 	switch (index)
 	{
-		case 0 :
-			std::cout << "couleurs" << std::endl;
-			break;
 		case 1 :
 			std::cout << "polygone a decouper" << std::endl;
 			break;
@@ -106,6 +101,29 @@ void elementSelected(int index)
 	}
 }
 
+void colorMenu(int index)
+{
+	switch (index)
+	{
+		case 0 :
+			changeColor(1.0, 0.0, 0.0);
+			break;
+		case 1:
+			changeColor(0.0, 1.0, 0.0);
+			break;
+		case 2:
+			changeColor(0.0, 0.0, 1.0);
+			break;
+		default:
+			std::cout << "couleur non reportorie." << std::endl;
+	}
+}
+
+void changeColor(float red,float green, float blue)
+{
+	currentColor = Color(red, green, blue);
+}
+
 void init()
 {
 	glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -118,4 +136,6 @@ void init()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	currentColor = Color(1.0, 0.0, 0.0);
 }
