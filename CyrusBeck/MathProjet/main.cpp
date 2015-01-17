@@ -1,15 +1,21 @@
 #include <iostream>
 #include <GL\glut.h>
+#include <GL\gl.h>
+#include "Point.h"
+#include <vector>
 
 void mouseClicks(int button, int state, int x, int y);
 void affichage();
 void createMenu();
 void elementSelected(int i);
+void init();
+
+std::vector<Point> pointArray;
 
 int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);                       // Initialisation
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH); // mode d'affichage RGB, et test prafondeur
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
 	glutInitWindowSize(500, 500);                // dimension fenêtre
 	glutInitWindowPosition(100, 100);           // position coin haut gauche
 	glutCreateWindow("Math projet");  // nom
@@ -18,27 +24,30 @@ int main(int argc, char **argv)
 	glutMouseFunc(mouseClicks);
 	glutDisplayFunc(affichage);
 	//
+	init();
 	glutMainLoop();
 	return 0;
 }
 
 void mouseClicks(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-		std::cout << "bouton gauche cliqué" << std::endl;
+		y = 500 - y;
+		std::cout << "x : " << x << " y : " << y << std::endl;
+		glPointSize(10);
+		glBegin(GL_POINTS);
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glVertex2f(x, y);
+		glEnd();
+		glutSwapBuffers();
 	}
 }
 
 void affichage(){
-
 	// effacement de l'image avec la couleur de fond
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glLoadIdentity();
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	// On foce l'affichage du résultat
 	glFlush();
-	// On échange les buffers
-	glutSwapBuffers();
 }
 
 void createMenu()
@@ -55,7 +64,6 @@ void createMenu()
 
 void elementSelected(int index)
 {
-	//std::cout << "element selected : " << index << std::endl;
 	switch (index)
 	{
 		case 0 :
@@ -77,4 +85,18 @@ void elementSelected(int index)
 			std::cout << "index non reconnu" << std::endl;
 			break;
 	}
+}
+
+void init()
+{
+	glClearColor(1.0, 1.0, 1.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glViewport(0, 0, 500, 500);
+	glMatrixMode(GL_PROJECTION);
+	glOrtho(0.0, 500.0, 0.0, 500.0, 1.0, -1.0);
+	//gluOrtho2D(0.0, 500.0, 0.0, 500.0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
