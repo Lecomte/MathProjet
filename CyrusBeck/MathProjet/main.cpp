@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void mouseClicks(int button, int state, int x, int y) {
+/*void mouseClicks(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		y = 500 - y;
 		std::cout << "x : " << x << " y : " << y << std::endl;
@@ -40,11 +40,30 @@ void mouseClicks(int button, int state, int x, int y) {
 		glEnd();
 		glutSwapBuffers();
 	}
+}*/
+
+void mouseClicks(int button, int state, int x, int y) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		y = 500 - y;
+		pointArray.push_back(Point(x, y));
+		glutPostRedisplay();
+	}
 }
 
 void affichage(){
 	// effacement de l'image avec la couleur de fond
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	glPointSize(10);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	for (std::vector<Point>::size_type i = 0; i < pointArray.size(); i++)
+	{
+		glBegin(GL_POINTS);
+		glVertex2f(pointArray[i].x_get(),pointArray[i].y_get());
+		glEnd();
+	}
+
+	glutSwapBuffers();
 
 	// On foce l'affichage du résultat
 	glFlush();
