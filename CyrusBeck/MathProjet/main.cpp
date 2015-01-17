@@ -2,17 +2,22 @@
 #include <GL\glut.h>
 #include <GL\gl.h>
 #include "Point.h"
+#include "Polygon.h"
 #include <vector>
 
 void mouseClicks(int button, int state, int x, int y);
 void affichage();
 void createMenu();
 void elementSelected(int i);
+void newPolygon();
 void colorMenu(int index);
 void changeColor(float red, float green, float blue);
 void init();
 Color currentColor;
 
+int drawingMode;
+Polygon* currentPoly;
+std::vector<Polygon*> polygonArray;
 std::vector<Point> pointArray;
 
 int main(int argc, char **argv)
@@ -35,7 +40,15 @@ int main(int argc, char **argv)
 void mouseClicks(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		y = 500 - y;
-		pointArray.push_back(Point(x, y, currentColor));
+		Point p = Point(x, y, currentColor);
+		if (drawingMode == GL_POINTS)
+		{
+			pointArray.push_back(p);
+		}
+		else if (drawingMode == GL_POLYGON)
+		{
+			currentPoly->addPoint(p);
+		}
 		glutPostRedisplay();
 	}
 }
@@ -45,14 +58,30 @@ void affichage(){
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glPointSize(10);
+	//draw point
+	glBegin(GL_POINTS);
 	for (std::vector<Point>::size_type i = 0; i < pointArray.size(); i++)
 	{
-		glBegin(GL_POINTS);
 		Point p = pointArray[i];
 		glColor3f(p.color_get().red_get(), p.color_get().green_get(), p.color_get().blue_get());
 		glVertex2f(p.x_get(),p.y_get());
+	}
+	glEnd();
+
+	//draw poly
+	for (std::vector<Polygon>::size_type i = 0; i < polygonArray.size(); i++)
+	{
+		glBegin(GL_POLYGON);
+		std::vector<Point> polygonPoints = polygonArray[i]->points_get();
+		for (std::vector<Point>::size_type j = 0; j < polygonPoints.size(); j++)
+		{
+			Point p = polygonPoints[j];
+			glColor3f(p.color_get().red_get(), p.color_get().green_get(), p.color_get().blue_get());
+			glVertex2f(p.x_get(), p.y_get());
+		}
 		glEnd();
 	}
+	
 
 	glutSwapBuffers();
 
@@ -84,7 +113,7 @@ void elementSelected(int index)
 	switch (index)
 	{
 		case 1 :
-			std::cout << "polygone a decouper" << std::endl;
+			newPolygon();
 			break;
 		case 2 :
 			std::cout << "tracer fenetre" << std::endl;
@@ -101,6 +130,20 @@ void elementSelected(int index)
 	}
 }
 
+void newPolygon()
+{
+	if (drawingMode == GL_POINTS)
+	{
+		drawingMode = GL_POLYGON;
+		currentPoly = new Polygon();
+		polygonArray.push_back(currentPoly);
+	}
+	else{
+		drawingMode = GL_POINTS;
+	}
+
+}
+
 void colorMenu(int index)
 {
 	switch (index)
@@ -115,7 +158,7 @@ void colorMenu(int index)
 			changeColor(0.0, 0.0, 1.0);
 			break;
 		default:
-			std::cout << "couleur non reportorie." << std::endl;
+			std::cout << "couleur non repertorie." << std::endl;
 	}
 }
 
@@ -131,11 +174,12 @@ void init()
 
 	glViewport(0, 0, 500, 500);
 	glMatrixMode(GL_PROJECTION);
-	glOrtho(0.0, 500.0, 0.0, 500.0, 1.0, -1.0);
-	//gluOrtho2D(0.0, 500.0, 0.0, 500.0);
+	//glOrtho(0.0, 500.0, 0.0, 500.0, 1.0, -1.0);
+	gluOrtho2D(0.0, 500.0, 0.0, 500.0);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	drawingMode = GL_POINTS;
 	currentColor = Color(1.0, 0.0, 0.0);
 }
