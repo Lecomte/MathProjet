@@ -36,6 +36,15 @@ Color Point::color_get()
 	return this->color_;
 }
 
+bool Point::operator==(Point const& a)
+{
+	if (this->x_ == a.x_ && this->y_ == a.y_ && this->color_ == a.color_)
+	{
+		return true;
+	}
+	return false;
+}
+
 Point::~Point()
 {
 }

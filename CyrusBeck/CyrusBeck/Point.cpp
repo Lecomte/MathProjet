@@ -23,7 +23,6 @@ float Point::y_get()
 	return this->y_;
 }
 
-
 Point::~Point()
 {
 }

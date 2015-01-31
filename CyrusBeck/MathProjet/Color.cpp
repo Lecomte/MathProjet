@@ -28,6 +28,15 @@ float Color::blue_get()
 {
 	return this->blue_;
 }
+
+bool Color::operator==(Color const& c)
+{
+	if (this->red_ == c.red_ && this->green_ == c.green_ && this->blue_ == c.blue_)
+	{
+		return true;
+	}
+	return false;
+}
 	
 Color::~Color()
 {

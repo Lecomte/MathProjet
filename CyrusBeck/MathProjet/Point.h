@@ -10,6 +10,7 @@ public:
 	float x_get();
 	float y_get();
 	Color color_get();
+	bool operator==(Point const& a);
 	~Point();
 
 private:
