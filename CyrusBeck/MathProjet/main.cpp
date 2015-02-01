@@ -3,6 +3,7 @@
 #include <GL\gl.h>
 #include "Point.h"
 #include "Polygon.h"
+#include "Fenetrage.h"
 #include <vector>
 #include <string>
 
@@ -149,7 +150,8 @@ void elementSelected(int index)
 			newPolygon(true);
 			break;
 		case 3 :
-			std::cout << "fenetrage" << std::endl;
+			Fenetrage().Sutherland_Hodgman();
+			//std::cout << "fenetrage" << std::endl;
 			break;
 		case 4 :
 			std::cout << "remplissage" << std::endl;

@@ -45,6 +45,16 @@ bool Point::operator==(Point const& a)
 	return false;
 }
 
+Point Point::operator+(Point const& a)
+{
+	return Point(a.x_ - this->x_, a.y_ - this->y_);
+}
+
+Point Point::operator-(Point const& a)
+{
+	return Point(a.x_ - this->x_, a.y_ - this->y_);
+}
+
 Point::~Point()
 {
 }
