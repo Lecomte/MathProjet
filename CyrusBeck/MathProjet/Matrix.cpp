@@ -39,6 +39,7 @@ Matrix::Matrix(std::vector<std::vector<float>> matrix)
 float Matrix::determinant()
 {
 	float det = 0;
+
 	if (this->matrix_.size() == 2 && this->matrix_[0].size() == 2)
 	{
 		return this->matrix_[0][0] * this->matrix_[1][1] - this->matrix_[0][1] * this->matrix_[1][0];
