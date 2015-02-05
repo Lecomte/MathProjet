@@ -1,5 +1,18 @@
 #include "Matrix.h"
 
+Matrix::Matrix(float matrix[2][1])
+{
+	std::vector<std::vector<float>> newMatrice;
+	std::vector<float> newColonne;
+	for (std::vector<float>::size_type ligne = 0; ligne < 2; ligne++)
+	{
+		newColonne.push_back(matrix[ligne][0]);
+		newMatrice.push_back(newColonne);
+		newColonne.clear();
+	}
+	this->matrix_ = newMatrice;
+}
+
 Matrix::Matrix(float matrix[2][2])
 {
 	std::vector<std::vector<float>> newMatrice;
@@ -11,6 +24,7 @@ Matrix::Matrix(float matrix[2][2])
 			newColonne.push_back(matrix[ligne][col]);
 		}
 		newMatrice.push_back(newColonne);
+		newColonne.clear();
 	}
 	this->matrix_ = newMatrice;
 }
@@ -34,6 +48,11 @@ Matrix::Matrix(float matrix[3][3])
 Matrix::Matrix(std::vector<std::vector<float>> matrix)
 {
 	this->matrix_ = matrix;
+}
+
+std::vector<std::vector<float>> Matrix::matrix_get()
+{
+	return this->matrix_;
 }
 
 float Matrix::determinant()
@@ -125,12 +144,68 @@ Matrix Matrix::transpose()
 	return Matrix(tMatrix);
 }
 
-void Matrix::printMatrix()
+Matrix Matrix::inverse()
 {
-	std::cout << "matrice : " << std::endl;
+	float det = this->determinant();
+	Matrix transComatrix = this->comatrice().transpose();
+	transComatrix = transComatrix.produitReel(1 / det);
+	return transComatrix;
+}
+
+Matrix Matrix::produitReel(float real)
+{
 	for (std::vector<float>::size_type ligne = 0; ligne < this->matrix_.size(); ligne++)
 	{
 		for (std::vector<float>::size_type col = 0; col < this->matrix_[ligne].size(); col++)
+		{
+			this->matrix_[ligne][col] *= real;
+		}
+	}
+	return this->matrix_;
+}
+
+Matrix Matrix::produitMatrice(Matrix matrix)
+{
+	if (matrix.matrix_.size() != this->matrix_[0].size())
+	{
+		std::cout << "error number of row != number of column" << std::endl;
+	}
+	std::vector<std::vector<float>> newMatrice;
+	std::vector<float> newColonne;
+	float lineNumber = this->matrix_.size();
+	float columnNumber = matrix.matrix_[0].size();
+	for (std::vector<float>::size_type ligne = 0; ligne < this->matrix_.size(); ligne++)
+	{
+		for (std::vector<float>::size_type col = 0; col < matrix.matrix_[ligne].size(); col++)
+		{
+			newColonne.push_back(0);
+		}
+		newMatrice.push_back(newColonne);
+		newColonne.clear();
+	}
+	float produit = 0;
+	for (std::vector<float>::size_type ligne = 0; ligne < newMatrice.size(); ligne++)
+	{
+		for (std::vector<float>::size_type col = 0; col < newMatrice[ligne].size(); col++)
+		{
+			produit = 0;
+			for (int i = 0; i < lineNumber; i++)
+			{
+				produit += this->matrix_[ligne][i] * matrix.matrix_[i][col];
+			}
+			newMatrice[ligne][col] = produit;
+		}
+	}
+	Matrix newMat = Matrix(newMatrice);
+	return newMat;
+}
+
+void Matrix::printMatrix()
+{
+	std::cout << "matrice : " << std::endl;
+	for (std::vector<float>::size_type col = 0; col < this->matrix_.size(); col++)
+	{
+		for (std::vector<float>::size_type ligne = 0; ligne < this->matrix_[col].size(); ligne++)
 		{
 			std::cout << this->matrix_[col][ligne] << " ";
 		}
