@@ -4,6 +4,7 @@
 #include "Point.h"
 #include "Polygon.h"
 #include "Fenetrage.h"
+#include "Remplissage.h"
 #include <vector>
 #include <string>
 
@@ -14,14 +15,15 @@
 void mouseClicks(int button, int state, int x, int y);
 void affichage();
 void createMenu();
+void remplissageMenu(int index);
 void elementSelected(int i);
 void newPolygon(bool isFenetrage);
 void colorMenu(int index);
 void customColor();
 void changeColor(float red, float green, float blue);
 void clearAll(int index);
-void clearOnePoly(int indexPoly);
-void createClearPolySubMenu(int parentMenu);
+//void clearOnePoly(int indexPoly);
+//void createClearPolySubMenu(int parentMenu);
 void init();
 Color currentColor;
 
@@ -32,6 +34,7 @@ Polygon* currentPoly;
 Polygon* currentFenetrage;
 std::vector<Polygon*> polygonArray;
 std::vector<Point> pointArray;
+std::vector<std::vector<std::list<Point>>> drawingPoly;
 
 int main(int argc, char **argv)
 {
@@ -107,6 +110,31 @@ void affichage(){
 		glVertex2f(p.x_get(), p.y_get());
 	}
 	glEnd();
+
+	for (std::vector<std::vector<std::list<Point>>>::size_type k = 0; k < drawingPoly.size(); k++)
+	{
+		std::vector<std::list<Point>> poly = drawingPoly[k];
+		for (std::vector<std::list<Point>>::size_type l = 0; l < poly.size(); l++)
+		{
+			std::list<Point> list = poly[l];
+			if (!list.empty()) //If the list is not empty
+			{
+				std::cout << "line draw" << std::endl;
+				
+				glPushMatrix();
+				glBegin(GL_LINES);
+				std::list<Point>::iterator lit;
+				for (lit = list.begin(); lit != list.end(); ++lit)
+				{
+					Point p = (*lit);
+					glColor3f(p.color_get().red_get(), p.color_get().green_get(), p.color_get().blue_get());
+					glVertex2f((*lit).x_get(),  (*lit).y_get());
+				}
+				glEnd();
+				glPopMatrix();
+			}
+		}
+	}
 	
 
 	glutSwapBuffers();
@@ -123,10 +151,14 @@ void createMenu()
 	glutAddMenuEntry("Rouge", 0);
 	glutAddMenuEntry("Vert", 1);
 	glutAddMenuEntry("Bleu", 2);
-	glutAddMenuEntry("Personnalise", 3); //a implementer plus tard
+	glutAddMenuEntry("Personnalise", 3);
+	//remplissage
+	int remplissageMen = glutCreateMenu(remplissageMenu);
+	glutAddMenuEntry("LCA", 1);
+	glutAddMenuEntry("Thomas remplissage", 2);
 	//clear menu
 	clearSubMenu = glutCreateMenu(clearAll);
-	createClearPolySubMenu(clearSubMenu);
+	//createClearPolySubMenu(clearSubMenu);
 	glutAddMenuEntry("Effacer tout", 1);
 	//menu principal
 	glutSetMenu(menuIndex);
@@ -134,13 +166,32 @@ void createMenu()
 	glutAddMenuEntry("Polygone", 1);
 	glutAddMenuEntry("Fenetre", 2);
 	glutAddMenuEntry("Fenetrage", 3);
-	glutAddMenuEntry("Remplissage", 4);
+	glutAddSubMenu("Remplissage", remplissageMen);
 	glutAddSubMenu("Effacer : ", clearSubMenu);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
+void remplissageMenu(int index)
+{
+	switch (index)
+	{
+	case 1:
+		std::cout << "LCA" << std::endl;
+		drawingPoly.push_back(Remplissage().RemplissageLCA(*currentPoly,currentColor));
+		glutPostRedisplay();
+		break;
+	case 2:
+		//Polygone actif a remplir currentPoly
+		//currenPoly.value
+		//sinon *currentPoly->value
+		//Remplissage().
+		break;
+	}
+}
+
 void elementSelected(int index)
 {
+	std::vector<Point> newPoints;
 	switch (index)
 	{
 		case 1 :
@@ -150,11 +201,21 @@ void elementSelected(int index)
 			newPolygon(true);
 			break;
 		case 3 :
-			Fenetrage().Sutherland_Hodgman();
-			//std::cout << "fenetrage" << std::endl;
+			if (currentPoly->points_get().size() == 0 || currentFenetrage->points_get().size() == 0)
+				return;
+			newPoints = Fenetrage().Sutherland_Hodgman(currentPoly->points_get(), currentFenetrage->points_get());
+			newPolygon(false);
+			for (int i = 0; i < newPoints.size(); i++)
+			{
+				Point p = newPoints[i];
+				//std::cout << "point " << i << "\nx : " << p.x_get() << "<\ny : " << p.y_get() << std::endl;
+				currentPoly->addPoint(p);
+				pointArray.push_back(p);
+				glutPostRedisplay();
+			}
 			break;
 		case 4 :
-			std::cout << "remplissage" << std::endl;
+			//remplissage maintenant vide pour le sous menu
 			break;
 		case 5:
 			clearAll(0);
@@ -172,7 +233,7 @@ void newPolygon(bool isFenetrage)
 		drawingMode = dMode_Poly;
 		currentPoly = new Polygon();
 		polygonArray.push_back(currentPoly);
-		createClearPolySubMenu(clearSubMenu);
+		//createClearPolySubMenu(clearSubMenu);
 	}
 	else{
 		drawingMode = dMode_Fenetre;
@@ -238,6 +299,7 @@ void clearAll(int index)
 	bool isFenetrage = false;
 	pointArray.clear();
 	polygonArray.clear();
+	drawingPoly.clear();
 	glutPostRedisplay();
 	if (drawingMode == dMode_Fenetre)
 	{
@@ -246,7 +308,7 @@ void clearAll(int index)
 	newPolygon(isFenetrage);
 }
 
-void clearOnePoly(int indexPoly)
+/*void clearOnePoly(int indexPoly)
 {
 	std::cout << "clear poly number : " << indexPoly << std::endl;
 	std::vector<Point> polygonPoints = polygonArray[indexPoly]->points_get();
@@ -268,9 +330,9 @@ void clearOnePoly(int indexPoly)
 	newPolygon(isFenetrage);
 	createClearPolySubMenu(clearSubMenu);
 	glutPostRedisplay();
-}
+}*/
 
-void createClearPolySubMenu(int parentMenu)
+/*void createClearPolySubMenu(int parentMenu)
 {
 	int polygonMenu = polySubMenu;
 	std::cout << "enter create Menu" << std::endl;
@@ -287,7 +349,7 @@ void createClearPolySubMenu(int parentMenu)
 	glutSetMenu(parentMenu);
 	glutChangeToSubMenu(polySubMenu, "Effacer Poly", polygonMenu);
 	polySubMenu = polygonMenu;
-}
+}*/
 
 void init()
 {

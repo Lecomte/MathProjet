@@ -31,6 +31,15 @@ float Point::y_get()
 	return this->y_;
 }
 
+void Point::x_set(float x)
+{
+	this->x_ = x;
+}
+void Point::y_set(float y)
+{
+	this->y_ = y;
+}
+
 Color Point::color_get()
 {
 	return this->color_;

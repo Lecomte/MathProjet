@@ -9,6 +9,8 @@ public:
 	Point(float, float,Color);
 	float x_get();
 	float y_get();
+	void x_set(float x);
+	void y_set(float y);
 	Color color_get();
 	bool operator==(Point const& a);
 	Point operator+(Point const& a);

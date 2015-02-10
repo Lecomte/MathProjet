@@ -9,6 +9,9 @@ public:
 	Polygon(std::vector<Point>);
 	void addPoint(Point);
 	std::vector<Point> points_get();
+	float getMinY();
+	float getMaxY();
+	void points_set(std::vector<Point> points);
 	~Polygon();
 private:
 	std::vector<Point> points_;
