@@ -31,6 +31,7 @@ std::vector<Point> Fenetrage::Sutherland_Hodgman(std::vector<Point> PL, std::vec
 				}
 			}
 			S = PL[j];
+			S.color_set(Color(0., 0., 0.));
 			if (visible(S, PW[i], PW[(i + 1) % PW.size()], PW))
 			{
 				PS.push_back(S);
@@ -47,7 +48,7 @@ std::vector<Point> Fenetrage::Sutherland_Hodgman(std::vector<Point> PL, std::vec
 				N2++;
 			}
 			PL = PS;
-			PS.clear();
+			//PS.clear();
 		}
 	}
 	return PL;

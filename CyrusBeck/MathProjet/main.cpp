@@ -16,6 +16,7 @@ void mouseClicks(int button, int state, int x, int y);
 void affichage();
 void createMenu();
 void remplissageMenu(int index);
+void selectMenu(int index);
 void elementSelected(int i);
 void newPolygon(bool isFenetrage);
 void colorMenu(int index);
@@ -156,6 +157,9 @@ void createMenu()
 	int remplissageMen = glutCreateMenu(remplissageMenu);
 	glutAddMenuEntry("LCA", 1);
 	glutAddMenuEntry("Thomas remplissage", 2);
+	//select menu
+	int selecMen = glutCreateMenu(selectMenu);
+	glutAddMenuEntry("Entrez la valeur dans la console", 1);
 	//clear menu
 	clearSubMenu = glutCreateMenu(clearAll);
 	//createClearPolySubMenu(clearSubMenu);
@@ -167,8 +171,24 @@ void createMenu()
 	glutAddMenuEntry("Fenetre", 2);
 	glutAddMenuEntry("Fenetrage", 3);
 	glutAddSubMenu("Remplissage", remplissageMen);
+	glutAddSubMenu("Selectionner", selecMen);
 	glutAddSubMenu("Effacer : ", clearSubMenu);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+void selectMenu(int index)
+{
+	int polyNumber;
+	std::cout << "Numero du poly entre 0 et " << polygonArray.size()-1 << std::endl;
+	std::cin >> polyNumber;
+	if (polyNumber < 0 || polyNumber > polygonArray.size()-1)
+	{
+		std::cout << "Erreur dans le numero du poly" << std::endl;
+		return;
+	}
+	else{
+		currentPoly = polygonArray[polyNumber];
+	}
 }
 
 void remplissageMenu(int index)
@@ -177,8 +197,12 @@ void remplissageMenu(int index)
 	{
 	case 1:
 		std::cout << "LCA" << std::endl;
-		drawingPoly.push_back(Remplissage().RemplissageLCA(*currentPoly,currentColor));
-		glutPostRedisplay();
+		if (currentPoly->points_get().size() > 0)
+		{
+			drawingPoly.push_back(Remplissage().RemplissageLCA(*currentPoly, currentColor));
+			newPolygon(false);
+			glutPostRedisplay();
+		}
 		break;
 	case 2:
 		//Polygone actif a remplir currentPoly
@@ -211,8 +235,9 @@ void elementSelected(int index)
 				//std::cout << "point " << i << "\nx : " << p.x_get() << "<\ny : " << p.y_get() << std::endl;
 				currentPoly->addPoint(p);
 				pointArray.push_back(p);
-				glutPostRedisplay();
 			}
+			newPolygon(false);
+			glutPostRedisplay();
 			break;
 		case 4 :
 			//remplissage maintenant vide pour le sous menu
@@ -300,6 +325,7 @@ void clearAll(int index)
 	pointArray.clear();
 	polygonArray.clear();
 	drawingPoly.clear();
+	currentFenetrage = new Polygon();
 	glutPostRedisplay();
 	if (drawingMode == dMode_Fenetre)
 	{

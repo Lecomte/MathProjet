@@ -12,6 +12,7 @@ public:
 	void x_set(float x);
 	void y_set(float y);
 	Color color_get();
+	void color_set(Color color);
 	bool operator==(Point const& a);
 	Point operator+(Point const& a);
 	Point operator-(Point const& a);
