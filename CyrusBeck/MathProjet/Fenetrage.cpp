@@ -11,7 +11,7 @@ std::vector<Point> Fenetrage::Sutherland_Hodgman(std::vector<Point> PL, std::vec
 	Point F, S, I;
 	std::cout << "Sutherland" << std::endl;
 	std::vector<Point> PS = std::vector<Point>();
-	for (int i = 0; i < PW.size() - 1; i++)
+	for (int i = 0; i < PW.size(); i++)
 	{
 		N2 = 0;
 		PS = std::vector<Point>();
@@ -22,16 +22,16 @@ std::vector<Point> Fenetrage::Sutherland_Hodgman(std::vector<Point> PL, std::vec
 				F = PL[j];
 			}
 			else{
-				if (coupe(S, PL[j], PW[i], PW[i + 1],PW))
+				if (coupe(S, PL[j], PW[i], PW[(i + 1) % PW.size()], PW))
 				{
-					I = intersec(S, PL[j], PW[i], PW[i + 1]);
+					I = intersec(S, PL[j], PW[i], PW[(i + 1) % PW.size()]);
 					std::cout << "Ix : " << I.x_get() << "\nIy :" << I.y_get() << std::endl;
 					PS.push_back(I);
 					N2++;
 				}
 			}
 			S = PL[j];
-			if (visible(S, PW[i], PW[i + 1],PW))
+			if (visible(S, PW[i], PW[(i + 1) % PW.size()], PW))
 			{
 				PS.push_back(S);
 				N2++;
@@ -39,17 +39,92 @@ std::vector<Point> Fenetrage::Sutherland_Hodgman(std::vector<Point> PL, std::vec
 		}
 		if (N2 > 0)
 		{
-			if (coupe(S, F, PW[i], PW[i + 1],PW))
+			if (coupe(S, F, PW[i], PW[(i + 1) % PW.size()], PW))
 			{
-				I = intersec(S, F, PW[i], PW[i + 1]);
+				I = intersec(S, F, PW[i], PW[(i + 1) % PW.size()]);
 				std::cout << "Ix : " << I.x_get() << "\nIy :" << I.y_get() << std::endl;
 				PS.push_back(I);
 				N2++;
 			}
 			PL = PS;
+			PS.clear();
 		}
 	}
 	return PL;
+}
+
+bool Fenetrage::CyrusBeck(int X1, int Y1, int X2, int Y2, std::vector<Point> poly, std::vector<Point> normal, int nbSom)
+{
+	float tinf = FLT_MIN;
+	float tsup = FLT_MAX;
+	float DX = X2 - X1;
+	float DY = Y2 - Y1;
+	float DN = 0.f;
+	float WN = 0.f;
+	int nbSeg = nbSom - 1;
+	Point c;
+	float t = 0.f;
+	for (int i = 0; i < nbSeg; i++)
+	{
+		c = poly[i];
+		DN = DX * normal[i].x_get() + DY * normal[i].y_get();
+		WN = (X1 - c.x_get()) * normal[i].x_get() + (Y1 - c.x_get()) * normal[i].y_get();
+		if (DN == 0)
+		{
+			return WN >= 0;
+		}
+		else{
+			t = -WN / DN;
+			if (DN > 0)
+			{
+				if (t > tinf)
+				{
+					tinf = t;
+				}
+			}
+			else
+			{
+				if (t < tsup)
+				{
+					tsup = t;
+				}
+			}
+		}
+	}
+	if (tinf < tsup)
+	{
+		if (tinf < 0 && tsup > 1)
+		{
+			return true;
+		}
+		else
+		{
+			if (tinf > 1 || tsup < 0)
+			{
+				return false;
+			}
+			else
+			{
+				if (tinf < 0)
+				{
+					tinf = 0.f;
+				}
+				else
+				{
+					if (tsup > 1)
+					{
+						tsup = 1;
+					}
+				}
+				X2 = X1 + DX * tsup;
+				Y2 = Y1 + DX * tsup;
+				X1 = X1 + DX * tinf;
+				Y1 = Y1 + DX * tinf;
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 /*float matrice[3][3] = { { 0, 1, 2 }, { 1, 1, 2 }, { -1, 1, 1 } };

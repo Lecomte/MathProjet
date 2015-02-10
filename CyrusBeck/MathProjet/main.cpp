@@ -119,7 +119,7 @@ void affichage(){
 			std::list<Point> list = poly[l];
 			if (!list.empty()) //If the list is not empty
 			{
-				std::cout << "line draw" << std::endl;
+				//std::cout << "line draw" << std::endl;
 				
 				glPushMatrix();
 				glBegin(GL_LINES);

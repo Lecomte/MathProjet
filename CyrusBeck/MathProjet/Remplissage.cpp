@@ -31,6 +31,8 @@ std::vector<std::list<Point>> Remplissage::RemplissageLCA(Polygon poly,Color cur
 		{
 			if ((*lit).getYMax() <= currY)
 				lit = lca.erase(lit);
+			if (lit == lca.end())
+				break;
 		}
 
 		lca.sort();

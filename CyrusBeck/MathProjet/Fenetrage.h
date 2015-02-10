@@ -16,6 +16,7 @@ public:
 	Point intersection(Point p, Point otherPolygonePoint, Point windowPoint, Point windowNextPoint);
 	Point intersec(Point x, Point y, Point x2, Point y2);
 	bool visible(Point p, Point windowPoint, Point windowNextPoint, std::vector<Point> PW);
+	bool Fenetrage::CyrusBeck(int X1, int Y1, int X2, int Y2, std::vector<Point> poly, std::vector<Point> normal, int nbSom);
 	~Fenetrage();
 private:
 	vector2 getInteriorNormal(Point windowPoint, Point windowNextPoint, std::vector<Point> PW);
