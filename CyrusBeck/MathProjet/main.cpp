@@ -33,6 +33,7 @@ int polySubMenu=-1;
 int clearSubMenu;
 Polygon* currentPoly;
 Polygon* currentFenetrage;
+std::vector<Polygon*> windowArray;
 std::vector<Polygon*> polygonArray;
 std::vector<Point> pointArray;
 std::vector<std::vector<std::list<Point>>> drawingPoly;
@@ -102,15 +103,18 @@ void affichage(){
 	}
 
 	//drawFenetre
-	glBegin(GL_LINE_LOOP);
-	std::vector<Point> polygonPoints = currentFenetrage->points_get();
-	for (std::vector<Point>::size_type j = 0; j < polygonPoints.size(); j++)
+	for (std::vector<Polygon>::size_type i = 0; i < windowArray.size(); i++)
 	{
-		Point p = polygonPoints[j];
-		glColor3f(p.color_get().red_get(), p.color_get().green_get(), p.color_get().blue_get());
-		glVertex2f(p.x_get(), p.y_get());
+		glBegin(GL_LINE_LOOP);
+		std::vector<Point> polygonPoints = windowArray[i]->points_get();
+		for (std::vector<Point>::size_type j = 0; j < polygonPoints.size(); j++)
+		{
+			Point p = polygonPoints[j];
+			glColor3f(p.color_get().red_get(), p.color_get().green_get(), p.color_get().blue_get());
+			glVertex2f(p.x_get(), p.y_get());
+		}
+		glEnd();
 	}
-	glEnd();
 
 	for (std::vector<std::vector<std::list<Point>>>::size_type k = 0; k < drawingPoly.size(); k++)
 	{
@@ -263,6 +267,7 @@ void newPolygon(bool isFenetrage)
 	else{
 		drawingMode = dMode_Fenetre;
 		currentFenetrage = new Polygon();
+		windowArray.push_back(currentFenetrage);
 	}
 }
 
@@ -325,7 +330,7 @@ void clearAll(int index)
 	pointArray.clear();
 	polygonArray.clear();
 	drawingPoly.clear();
-	currentFenetrage = new Polygon();
+	windowArray.clear();
 	glutPostRedisplay();
 	if (drawingMode == dMode_Fenetre)
 	{

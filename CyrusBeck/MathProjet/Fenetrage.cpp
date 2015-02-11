@@ -37,6 +37,10 @@ std::vector<Point> Fenetrage::Sutherland_Hodgman(std::vector<Point> PL, std::vec
 				PS.push_back(S);
 				N2++;
 			}
+			/*else{
+				PS.clear();
+				N2--;
+			}*/
 		}
 		if (N2 > 0)
 		{
@@ -48,7 +52,7 @@ std::vector<Point> Fenetrage::Sutherland_Hodgman(std::vector<Point> PL, std::vec
 				N2++;
 			}
 			PL = PS;
-			//PS.clear();
+			PS.clear();
 		}
 	}
 	return PL;
@@ -218,10 +222,10 @@ vector2 Fenetrage::getInteriorNormal(Point windowPoint, Point windowNextPoint, s
 	float dx = windowNextPoint.x_get() - windowPoint.x_get();
 	float dy = windowNextPoint.y_get() - windowPoint.y_get();
 	Point P3;
-	for (int i = 0; i < PW.size(); i++)                       // Here we get any point of the polygon
-	{                                                                   // wich is not P1 or P2.
-		if (PW[i] == windowPoint || PW[i] == windowNextPoint)                                    // Just to be sur that this point is in
-			continue;                                                   // the polygon
+	for (int i = 0; i < PW.size(); i++)
+	{
+		if (PW[i] == windowPoint || PW[i] == windowNextPoint)
+			continue;
 		else
 		{
 			P3 = PW[i];

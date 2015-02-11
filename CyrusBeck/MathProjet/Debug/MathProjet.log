@@ -1,10 +1,17 @@
-﻿La génération a démarré 11/02/2015 00:46:22.
+﻿La génération a démarré 11/02/2015 01:04:54.
      1>Projet "C:\Users\Emerick\Documents\MathProjet\CyrusBeck\MathProjet\MathProjet.vcxproj" sur le nœud 2 (Build cible(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
-         main.cpp
-     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\main.cpp(184): warning C4018: '>' : incompatibilité signed/unsigned
-     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\main.cpp(232): warning C4018: '<' : incompatibilité signed/unsigned
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Fenetrage.cpp
+         Fenetrage.cpp
+     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\fenetrage.cpp(14): warning C4018: '<' : incompatibilité signed/unsigned
+     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\fenetrage.cpp(18): warning C4018: '<' : incompatibilité signed/unsigned
+     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\fenetrage.cpp(65): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\fenetrage.cpp(66): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\fenetrage.cpp(124): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\fenetrage.cpp(125): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\fenetrage.cpp(126): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\fenetrage.cpp(127): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+     1>c:\users\emerick\documents\mathprojet\cyrusbeck\mathprojet\fenetrage.cpp(225): warning C4018: '<' : incompatibilité signed/unsigned
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Emerick\Documents\MathProjet\CyrusBeck\Debug\MathProjet.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Emerick\Documents\MathProjet\CyrusBeck\Debug\MathProjet.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Emerick\Documents\MathProjet\CyrusBeck\Debug\MathProjet.lib" /MACHINE:X86 Debug\Color.obj
          Debug\Fenetrage.obj
@@ -20,4 +27,4 @@
 
 La génération a réussi.
 
-Temps écoulé 00:00:00.74
+Temps écoulé 00:00:00.70
