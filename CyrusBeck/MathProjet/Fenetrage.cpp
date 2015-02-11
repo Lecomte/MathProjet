@@ -37,11 +37,8 @@ std::vector<Point> Fenetrage::Sutherland_Hodgman(std::vector<Point> PL, std::vec
 				PS.push_back(S);
 				N2++;
 			}
-			/*else{
-				PS.clear();
-				N2--;
-			}*/
 		}
+		PL.clear();
 		if (N2 > 0)
 		{
 			if (coupe(S, F, PW[i], PW[(i + 1) % PW.size()], PW))
